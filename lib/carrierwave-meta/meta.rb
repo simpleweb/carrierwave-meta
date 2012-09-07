@@ -48,19 +48,17 @@ module CarrierWave
 
     def get_dimensions
       [].tap do |size|
-        if self.file.content_type =~ /image/
-          manipulate! do |img|
-            if defined?(::Magick::Image) && img.is_a?(::Magick::Image)
-              size << img.columns
-              size << img.rows
-            elsif defined?(::MiniMagick::Image) && img.is_a?(::MiniMagick::Image)
-              size << img["width"]
-              size << img["height"]
-            else
-              raise "Only RMagick & MiniMagick are supported yet. Fork and update it."
-            end
-            img
+        manipulate! do |img|
+          if defined?(::Magick::Image) && img.is_a?(::Magick::Image)
+            size << img.columns
+            size << img.rows
+          elsif defined?(::MiniMagick::Image) && img.is_a?(::MiniMagick::Image)
+            size << img["width"]
+            size << img["height"]
+          else
+            raise "Only RMagick & MiniMagick are supported yet. Fork and update it."
           end
+          img
         end
       end
     rescue CarrierWave::ProcessingError
